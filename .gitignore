@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+*.egg
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Flink
+data-pipeline/flink/lib/*.jar
+!data-pipeline/flink/lib/.gitkeep
+
+# ML models
+services/ml-training/models/*
+!services/ml-training/models/.gitkeep
+
+# Docker
+docker/data/
+docker/logs/
+
+# Terraform
+infra/terraform/**/.terraform/
+infra/terraform/**/terraform.tfstate
+infra/terraform/**/terraform.tfstate.backup
+infra/terraform/**/*.tfvars
+!infra/terraform/environments/**/*.tfvars
+
+# dbt
+analytics/dbt/dbt_packages/
+analytics/dbt/logs/
+analytics/dbt/target/
+
+# Generic
+*.log
+*.tmp
