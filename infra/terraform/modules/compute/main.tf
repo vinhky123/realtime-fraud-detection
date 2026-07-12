@@ -216,7 +216,6 @@ resource "aws_ecs_service" "backend" {
   cluster         = aws_ecs_cluster.main.id
   task_definition = aws_ecs_task_definition.backend.arn
   desired_count   = var.backend_desired_count
-  launch_type     = "FARGATE"
 
   deployment_controller {
     type = "ECS"
