@@ -40,7 +40,7 @@ infra/terraform/**/.terraform/
 infra/terraform/**/terraform.tfstate
 infra/terraform/**/terraform.tfstate.backup
 infra/terraform/**/*.tfvars
-!infra/terraform/environments/**/*.tfvars
+!infra/terraform/terraform.tfvars
 
 # dbt
 analytics/dbt/dbt_packages/

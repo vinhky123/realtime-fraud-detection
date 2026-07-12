@@ -67,7 +67,8 @@ streaming-fraud-detection/
 ├── docs/                       # Architecture docs & project plan
 ├── infra/terraform/            # Infrastructure as Code (AWS)
 │   ├── modules/                # Reusable Terraform modules
-│   └── environments/           # Dev / Prod environments
+│   ├── main.tf                 # Root configuration (single environment)
+│   └── terraform.tfvars        # Environment values
 │
 ├── services/                   # AWS Cloud services
 │   ├── backend-api/            # FastAPI decision engine
