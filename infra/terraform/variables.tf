@@ -37,6 +37,18 @@ variable "glue_database_name" {
   default     = "fraud_detection_dev"
 }
 
+variable "github_org" {
+  description = "GitHub org/username for Actions OIDC trust."
+  type        = string
+  default     = ""
+}
+
+variable "github_repo" {
+  description = "GitHub repo name for Actions OIDC trust."
+  type        = string
+  default     = ""
+}
+
 variable "tags" {
   description = "Extra resource tags."
   type        = map(string)

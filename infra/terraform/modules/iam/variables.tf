@@ -20,6 +20,18 @@ variable "s3_bucket_arn" {
   type        = string
 }
 
+variable "github_org" {
+  description = "GitHub organization or username for OIDC trust."
+  type        = string
+  default     = ""
+}
+
+variable "github_repo" {
+  description = "GitHub repository name for OIDC trust."
+  type        = string
+  default     = ""
+}
+
 variable "tags" {
   description = "Extra tags."
   type        = map(string)

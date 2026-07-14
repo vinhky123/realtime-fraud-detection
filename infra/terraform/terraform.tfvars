@@ -12,6 +12,9 @@ bucket_name         = "fraud-lake-800380167165" # globally unique (account-id su
 dynamodb_table_name = "user_features_v1"
 glue_database_name  = "fraud_detection_dev"
 
+github_org  = "vinhky123"
+github_repo = "realtime-fraud-detection"
+
 tags = {
   Team = "data-platform"
   Cost = "fraud-detection"

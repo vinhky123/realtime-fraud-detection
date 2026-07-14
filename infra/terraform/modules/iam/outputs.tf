@@ -27,3 +27,8 @@ output "pipeline_task_role_name" {
   description = "Pipeline task role name"
   value       = aws_iam_role.pipeline_task.name
 }
+
+output "github_actions_role_arn" {
+  description = "GitHub Actions OIDC role ARN"
+  value       = var.github_org != "" ? aws_iam_role.github_actions[0].arn : null
+}

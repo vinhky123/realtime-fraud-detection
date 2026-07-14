@@ -216,3 +216,98 @@ resource "aws_iam_role_policy" "pipeline_task" {
   role   = aws_iam_role.pipeline_task.id
   policy = data.aws_iam_policy_document.pipeline_task.json
 }
+
+############################################
+# GitHub Actions OIDC Role
+# Assumed by CI/CD workflows for ECR/ECS
+############################################
+
+resource "aws_iam_openid_connect_provider" "github" {
+  count = var.github_org != "" ? 1 : 0
+
+  url             = "https://token.actions.githubusercontent.com"
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
+}
+
+data "aws_iam_policy_document" "github_actions_assume" {
+  count = var.github_org != "" ? 1 : 0
+
+  statement {
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+    principals {
+      type        = "Federated"
+      identifiers = [aws_iam_openid_connect_provider.github[0].arn]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "token.actions.githubusercontent.com:aud"
+      values   = ["sts.amazonaws.com"]
+    }
+    condition {
+      test     = "StringLike"
+      variable = "token.actions.githubusercontent.com:sub"
+      values   = ["repo:${var.github_org}/${var.github_repo}:*"]
+    }
+  }
+}
+
+resource "aws_iam_role" "github_actions" {
+  count = var.github_org != "" ? 1 : 0
+
+  name               = "${local.name_prefix}-github-actions"
+  assume_role_policy = data.aws_iam_policy_document.github_actions_assume[0].json
+  tags               = local.common_tags
+}
+
+data "aws_iam_policy_document" "github_actions" {
+  count = var.github_org != "" ? 1 : 0
+
+  statement {
+    sid    = "ECRPushPull"
+    effect = "Allow"
+    actions = [
+      "ecr:GetAuthorizationToken",
+      "ecr:BatchCheckLayerAvailability",
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:BatchGetImage",
+      "ecr:InitiateLayerUpload",
+      "ecr:UploadLayerPart",
+      "ecr:CompleteLayerUpload",
+      "ecr:PutImage"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    sid    = "ECSDeploy"
+    effect = "Allow"
+    actions = [
+      "ecs:DescribeTaskDefinition",
+      "ecs:RegisterTaskDefinition",
+      "ecs:UpdateService",
+      "ecs:DescribeServices"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    sid    = "PassRole"
+    effect = "Allow"
+    actions = [
+      "iam:PassRole"
+    ]
+    resources = [
+      aws_iam_role.task_execution.arn,
+      aws_iam_role.backend_task.arn
+    ]
+  }
+}
+
+resource "aws_iam_role_policy" "github_actions" {
+  count = var.github_org != "" ? 1 : 0
+
+  name   = "${local.name_prefix}-github-actions-policy"
+  role   = aws_iam_role.github_actions[0].id
+  policy = data.aws_iam_policy_document.github_actions[0].json
+}

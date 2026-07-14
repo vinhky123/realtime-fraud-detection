@@ -91,3 +91,8 @@ output "backend_log_group" {
   description = "Backend CloudWatch log group."
   value       = module.compute.log_group_backend
 }
+
+output "github_actions_role_arn" {
+  description = "GitHub Actions OIDC role ARN — set as AWS_ROLE_ARN secret."
+  value       = module.iam.github_actions_role_arn
+}
